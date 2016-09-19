@@ -1,3 +1,3 @@
 package models
 
-case class Location(x: Double, y: Double, floor: Int)
+case class Location(x: Position, y: Position, floor: Floor)
