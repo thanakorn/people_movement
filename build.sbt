@@ -6,7 +6,7 @@ scalaVersion := "2.11.7"
 
 // Change this to another test framework if you prefer
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "2.2.4" % "test",
+  "org.scalatest" %% "scalatest"  % "2.2.4" % "test",
   "joda-time"     %   "joda-time" % "2.9.4"
 )
 
