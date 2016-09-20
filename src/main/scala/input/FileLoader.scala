@@ -1,7 +1,7 @@
 package input
 
 import models.{Location, Trace}
-import org.joda.time.DateTime
+import org.joda.time.{DateTime, DateTimeZone}
 
 import scala.io.Source
 
@@ -16,7 +16,7 @@ class FileLoader(filename: String, skipHeader: Boolean = true) extends InputLoad
       val data = line.split(',')
       Trace(
         uid = data(4),
-        timestamp = new DateTime(data(0)),
+        timestamp = new DateTime(data(0), DateTimeZone.UTC),
         Location(x = data(1).toDouble, y = data(2).toDouble, floor = data(3).toInt)
       )
     }

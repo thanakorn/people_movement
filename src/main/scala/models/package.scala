@@ -6,5 +6,6 @@ package object models {
   type Timestamp = DateTime
   type Position = Double
   type Floor = Int
+  type Traces = List[Trace]
 
 }
