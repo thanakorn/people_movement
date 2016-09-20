@@ -1,4 +1,4 @@
-package data
+package input
 
 import models.{Location, Trace}
 import org.joda.time.DateTime
@@ -15,8 +15,8 @@ class FileLoader(filename: String, skipHeader: Boolean = true) extends InputLoad
     for(line <- source) yield {
       val data = line.split(',')
       Trace(
-        id = data(4),
-        timestamp = DateTime.parse(data(0)),
+        uid = data(4),
+        timestamp = new DateTime(data(0)),
         Location(x = data(1).toDouble, y = data(2).toDouble, floor = data(3).toInt)
       )
     }
