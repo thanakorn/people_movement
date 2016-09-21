@@ -1,4 +1,4 @@
-import models.{Distance, Location, Trace}
+import models.{Distance, Location, Meeting, Trace}
 import org.scalatest._
 import java.lang.Math._
 
@@ -11,7 +11,7 @@ class SimpleMeetingFinderSpec extends FlatSpec with Matchers {
 
   val meetingFinder = new SimpleMeetingFinder(distance, 2.0)
 
-  "BruteForceMeetingDetection" should "return empty for traces with different timestamp" in {
+  "SimpleMeetingFinder" should "return empty for traces with different timestamp" in {
     val uid1 = "uid1"
     val t1 = List(
       Trace(uid1, 0, Location(1.0, 1.0, 1)),
@@ -27,23 +27,7 @@ class SimpleMeetingFinderSpec extends FlatSpec with Matchers {
     meetingFinder.findMeeting(t1, t2).size should be(0)
   }
 
-  "BruteForceMeetingDetection" should "ignore millisecond in timestamp" in {
-    val uid1 = "uid1"
-    val t1 = List(
-      Trace(uid1, 0, Location(1.0, 1.0, 1)),
-      Trace(uid1, 1, Location(1.0, 1.0, 1))
-    )
-
-    val uid2 = "uid2"
-    val t2 = List(
-      Trace(uid2, 100, Location(1.0, 1.0, 1)),
-      Trace(uid2, 110, Location(11.30, 1.0, 1))
-    )
-
-    meetingFinder.findMeeting(t1, t2).size should be(2)
-  }
-
-  "BruteForceMeetingDetection" should "return empty for traces with different floor" in {
+  "SimpleMeetingFinder" should "return empty for traces with different floor" in {
     val uid1 = "uid1"
     val t1 = List(
       Trace(uid1, 0, Location(1.0, 1.0, 1)),
@@ -58,36 +42,33 @@ class SimpleMeetingFinderSpec extends FlatSpec with Matchers {
 
     meetingFinder.findMeeting(t1, t2).size should be(0)
   }
-//
-//  "BruteForceMeetingDetection" should "return empty for traces with different floor" in {
-//
-//    val uid1 = "20bcf0ad"
-//    val t1 = List(
-//      Trace(timestamp = new DateTime("2014-07-19T23:00:11.012"), location = Location(x = 103.77579, y = 71.40748404, floor = 2), uid = "20bcf0ad"),
-//      Trace(timestamp = new DateTime("2014-07-19T23:00:12.871"), location = Location(x = 103.56561, y = 71.97631916, floor = 2), uid = "20bcf0ad"),
-//      Trace(timestamp = new DateTime("2014-07-19T23:00:15.694"), location = Location(x = 103.614265, y = 71.93304878, floor =	2), uid = "20bcf0ad"),
-//      Trace(timestamp = new DateTime("2014-07-19T23:00:17.135"), location = Location(x = 103.88557,	y = 71.55554158, floor = 2), uid = "20bcf0ad"),
-//      Trace(timestamp = new DateTime("2014-07-19T23:00:22.163"), location = Location(x = 103.88311, y	= 71.54979263, floor =	2), uid =	"20bcf0ad"),
-//      Trace(timestamp = new DateTime("2014-07-19T23:00:23.673"), location = Location(x = 103.84489,	y = 71.47096978, floor = 2), uid = "20bcf0ad"),
-//      2014-07-19T23:00:27.065	103.85174	71.47569486	2	20bcf0ad,
-//      2014-07-19T23:00:49.285	105.32528	71.71383265	2	20bcf0ad,
-//      2014-07-19T23:00:53.472	104.6214	72.11556512	2	20bcf0ad,
-//      2014-07-19T23:00:59.818	101.35653	74.030811	2	20bcf0ad,
-//      2014-07-19T23:01:44.277	101.61179	73.97831723	1	20bcf0ad,
-//      2014-07-19T23:01:46.300	103.398674	71.84742434	1	20bcf0ad,
-//      2014-07-19T23:01:54.994	103.40437	71.8165699	1	20bcf0ad,
-//    )
-//
-//    val uid2 = "uid2"
-//    val t2 = List(
-//      Trace(uid2, new DateTime(0), Location(1.0, 1.0, 2)),
-//      Trace(uid2, new DateTime(1), Location(1.0, 1.0, 3)),
-//      Trace(uid2, new DateTime(2), Location(1.0, 1.0, 4)),
-//      Trace(uid2, new DateTime(3), Location(1.0, 1.0, 4)),
-//      Trace(uid2, new DateTime(4), Location(1.0, 1.0, 5))
-//    )
-//
-//    meetingFinder.findMeeting(t1, t2).size should be(0)
-//  }
+
+  "SimpleMeetingFinder" should "return meeting list between t1 and t2 if exist" in {
+
+    val uid1 = "20bcf0ad"
+    val t1 = List(
+      Trace(timestamp = 1, location = Location(x = 1.0, y = 1.0, floor = 2), uid = uid1),
+      Trace(timestamp = 2, location = Location(x = 1.5, y = 1.0, floor = 2), uid = uid1),
+      Trace(timestamp = 3, location = Location(x = 1.7, y = 1.2, floor =	2), uid = uid1),
+      Trace(timestamp = 4, location = Location(x = 2.0,	y = 1.5, floor = 2), uid = uid1),
+      Trace(timestamp = 5, location = Location(x = 3.0, y	= 3.0, floor =	2), uid =	uid1),
+      Trace(timestamp = 6, location = Location(x = 4.0,	y = 3.0, floor = 2), uid = uid1)
+    )
+
+    val uid2 = "da0fcb02"
+    val t2 = List(
+      Trace(timestamp = 1, location = Location(x = 1.0, y = 5.0, floor = 2), uid = uid2),
+      Trace(timestamp = 2, location = Location(x = 1.0, y = 4.0, floor = 2), uid = uid2),
+      Trace(timestamp = 3, location = Location(x = 2.0, y = 4.0, floor =	2), uid = uid2),
+      Trace(timestamp = 4, location = Location(x = 3.0,	y = 4.0, floor = 2), uid = uid2),
+      Trace(timestamp = 5, location = Location(x = 3.2, y	= 3.0, floor =	2), uid =	uid2),
+      Trace(timestamp = 6, location = Location(x = 3.5,	y = 2.0, floor = 2), uid = uid2)
+    )
+
+    val meetings = meetingFinder.findMeeting(t1, t2)
+    meetings.size should be(2)
+    meetings(0) should be(Meeting(5, uid1, Location(x = 3.0, y	= 3.0, floor =	2), uid2, Location(x = 3.2, y	= 3.0, floor =	2)))
+    meetings(1) should be(Meeting(6, uid1, Location(x = 4.0, y	= 3.0, floor =	2), uid2, Location(x = 3.5, y	= 2.0, floor =	2)))
+  }
 
 }

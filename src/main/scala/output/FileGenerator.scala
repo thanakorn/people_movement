@@ -10,7 +10,7 @@ class FileGenerator(filename: String) extends OutputGenerator{
     val file = new File(filename)
     val bw = new BufferedWriter(new FileWriter(file))
     bw.write("uid1,uid2,timestamp,x,y,floor\n")
-    meetings.map(m => bw.write(s"${m.uid1},${m.uid2},${new DateTime(m.timestamp).toString("yyyy-MM-dd'T'HH:mm:ss.SSS")},${m.location.x},${m.location.y},${m.location.floor}\n"))
+    meetings.map(m => bw.write(s"${m.uid1},${m.uid2},${new DateTime(m.timestamp).toString("yyyy-MM-dd'T'HH:mm:ss.SSS")},${m.location1.x},${m.location1.y},${m.location2.x},${m.location2.y},${m.location1.floor}\n"))
     bw.close()
   }
 

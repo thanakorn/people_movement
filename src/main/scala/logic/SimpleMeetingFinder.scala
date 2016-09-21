@@ -10,8 +10,8 @@ class SimpleMeetingFinder(override val distance: (Location, Location) => Distanc
     isTimeOverlap(t1, t1) match {
       case true =>
         t1.map(t => {
-          val meetTrace = t2.find(s => isMet(t, s))
-          if(meetTrace.isDefined) Option(Meeting(t.uid, meetTrace.get.uid, t.timestamp, t.location))
+          val meet = t2.find(s => isMet(t, s))
+          if(meet.isDefined) Option(Meeting(t.timestamp, t.uid, t.location, meet.get.uid, meet.get.location ))
           else None
         }).flatten
 
