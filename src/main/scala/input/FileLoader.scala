@@ -16,7 +16,7 @@ class FileLoader(filename: String, skipHeader: Boolean = true) extends InputLoad
       val data = line.split(',')
       Trace(
         uid = data(4),
-        timestamp = new DateTime(data(0), DateTimeZone.UTC),
+        timestamp = (new DateTime(data(0), DateTimeZone.UTC)).getMillis,
         Location(x = data(1).toDouble, y = data(2).toDouble, floor = data(3).toInt)
       )
     }
