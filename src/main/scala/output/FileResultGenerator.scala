@@ -4,7 +4,7 @@ import java.io.{BufferedWriter, File, FileWriter}
 import models.Meeting
 import org.joda.time.DateTime
 
-class FileGenerator(filename: String) extends OutputGenerator{
+class FileResultGenerator(filename: String) extends ResultGenerator{
 
   override def write(meetings: List[Meeting]): Unit = {
     val file = new File(filename)

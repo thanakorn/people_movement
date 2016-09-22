@@ -2,7 +2,7 @@ package output
 
 import models.Meeting
 
-trait OutputGenerator {
+trait ResultGenerator {
 
   def write(meetings: List[Meeting]): Unit
 
