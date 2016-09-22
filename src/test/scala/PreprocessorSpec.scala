@@ -49,19 +49,20 @@ class PreprocessorSpec extends FlatSpec with Matchers{
   }
 
   "pairElements" should "generate all possible pair of element in list" in {
-    val t1 = List(Trace("1", 1, location), Trace("1", 2, location))
-    val t2 = List(Trace("2", 1, location))
-    val t3 = List(Trace("3", 4, location), Trace("3", 5, location))
-    val t4 = List(Trace("4", 4, location), Trace("4", 5, location))
-    val traces = List(t1, t2, t3, t4)
-    val pairs = preprocessor.pairElements[Traces](traces)
-    pairs.length should be(6)
-    pairs.contains((t1, t2)) should be(true)
-    pairs.contains((t1, t3)) should be(true)
-    pairs.contains((t1, t4)) should be(true)
-    pairs.contains((t2, t3)) should be(true)
-    pairs.contains((t2, t4)) should be(true)
-    pairs.contains((t3, t4)) should be(true)
+    val t1 = Iterable(Trace("1", 1, location), Trace("1", 2, location))
+    val t2 = Iterable(Trace("2", 1, location))
+    val t3 = Iterable(Trace("3", 4, location), Trace("3", 5, location))
+    val t4 = Iterable(Trace("4", 4, location), Trace("4", 5, location))
+    val traces = Iterable(t1, t2, t3, t4)
+    val p = preprocessor.pairElements[Iterable[Trace]](traces)
+    val pairs = p.toIterator
+    p.toList.size should be(6)
+    pairs.next() should be(t1, t2)
+    pairs.next() should be(t1, t3)
+    pairs.next() should be(t1, t4)
+    pairs.next() should be(t2, t3)
+    pairs.next() should be(t2, t4)
+    pairs.next() should be(t3, t4)
   }
 
 }

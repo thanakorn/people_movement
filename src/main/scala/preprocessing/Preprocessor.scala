@@ -11,7 +11,7 @@ trait Preprocessor {
 
   def groupById(traces: Traces): Map[UID, Traces] = traces.groupBy(_.uid)
 
-  def pairElements[T](elements: List[T]): List[(T, T)] = {
+  def pairElements[T](elements: Iterable[T]): Iterable[(T, T)] = {
     val elementsWithIndex = elements.zipWithIndex
     for{
       (t1, index1) <- elementsWithIndex
