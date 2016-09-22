@@ -11,13 +11,11 @@ trait Preprocessor {
 
   def groupById(traces: Traces): Map[UID, Traces] = traces.groupBy(_.uid)
 
-  def sortByTimestamp(traces: Traces): Traces = traces.sortBy(_.timestamp)
-
-  def pairTraces(traces: List[Traces]): List[(Traces, Traces)] = {
-    val tracesWithIndex = traces.zipWithIndex
+  def pairElements[T](elements: List[T]): List[(T, T)] = {
+    val elementsWithIndex = elements.zipWithIndex
     for{
-      (t1, index1) <- tracesWithIndex
-      (t2, index2) <- tracesWithIndex
+      (t1, index1) <- elementsWithIndex
+      (t2, index2) <- elementsWithIndex
       if(index1 < index2)
     } yield (t1, t2)
   }
