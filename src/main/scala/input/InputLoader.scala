@@ -1,9 +1,9 @@
 package input
 
-import models.Trace
+import models.Traces
 
 trait InputLoader {
 
-  def load : Iterator[Trace]
+  def load : Traces
 
 }

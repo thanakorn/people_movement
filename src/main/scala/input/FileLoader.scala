@@ -1,6 +1,6 @@
 package input
 
-import models.{Location, Trace}
+import models.{Location, Trace, Traces}
 import org.joda.time.{DateTime, DateTimeZone}
 
 import scala.io.Source
@@ -9,17 +9,14 @@ class FileLoader(filename: String, skipHeader: Boolean = true) extends InputLoad
 
   implicit def str2date(str: String) = "yyyy-MM-ddTHH:mm:ss.SSS"
 
-  override def load: Iterator[Trace] = {
+  override def load: Traces = {
     val stream = getClass.getResourceAsStream(filename)
     val source = Source.fromInputStream(stream).getLines().drop(if(skipHeader) 1 else 0)
-    for(line <- source) yield {
+    val dataset = source.foldRight(List[Trace]())((line, traces) => {
       val data = line.split(',')
-      Trace(
-        uid = data(4),
-        timestamp = (new DateTime(data(0), DateTimeZone.UTC)).getMillis,
-        Location(x = data(1).toDouble, y = data(2).toDouble, floor = data(3).toInt)
-      )
-    }
+      Trace(data(4), (new DateTime(data(0), DateTimeZone.UTC)).getMillis, Location(data(1).toDouble, data(2).toDouble, data(3).toInt)) :: traces
+    })
+    dataset
   }
 
 }
