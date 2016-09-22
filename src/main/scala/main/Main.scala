@@ -18,6 +18,16 @@ object Main extends Preprocessor{
   def main(args: Array[String]): Unit = {
     val flow = RunnableGraph.fromGraph(GraphDSL.create(){implicit builder =>
       import GraphDSL.Implicits._
+
+      // Create source from dataset
+      val inputLoader = new FileLoader("/super_small_dataset.csv")
+      val dataset = inputLoader.load
+      val sources = builder.add(Source[Traces](List(dataset)))
+
+      // Sink
+      val result = builder.add(Sink.foreach[Traces](_.map(t => println(t))))
+
+      sources ~> result
       ClosedShape
     })
     flow.run()
