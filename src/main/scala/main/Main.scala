@@ -24,10 +24,13 @@ object Main extends Preprocessor{
       val dataset = inputLoader.load
       val sources = builder.add(Source[Traces](List(dataset)))
 
+      // Pre-process data
+      val ignoreMillisec = Flow[Traces].map(traces => floorTimestamp(traces, 3))
+
       // Sink
       val result = builder.add(Sink.foreach[Traces](_.map(t => println(t))))
 
-      sources ~> result
+      sources ~> ignoreMillisec ~> result
       ClosedShape
     })
     flow.run()
