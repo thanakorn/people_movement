@@ -33,11 +33,10 @@ object Main extends Preprocessor {
       // Pre-process data
       val filterUID = builder.add(Flow[Traces].map(traces => traces.filter(t => (t.uid == uid1|| t.uid == uid2))))
       val ignoreMillisec = builder.add(Flow[Traces].map(traces => floorTimestamp(traces, 3)))
-      val groupFloor = builder.add(Flow[Traces].map(traces => groupByFloor(traces)))
-      val groupId = builder.add(Flow[Map[Floor, Traces]].map(floorMap => floorMap.map { case(floor, traces) => floor -> groupById(traces).values }))
-
 
       // Calculation
+      val groupFloor = builder.add(Flow[Traces].map(traces => groupByFloor(traces)))
+      val groupId = builder.add(Flow[Map[Floor, Traces]].map(floorMap => floorMap.map { case(floor, traces) => floor -> groupById(traces).values }))
       val generateFloorPairs = builder.add(Flow[Map[Floor, Iterable[Traces]]].map(floorTraces => {
         floorTraces.foldLeft(Iterable[(Traces, Traces)]())((pairs , tracesList) => pairs ++ pairElements[Traces](tracesList._2))
       }))
