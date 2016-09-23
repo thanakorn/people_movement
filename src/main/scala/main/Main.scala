@@ -35,11 +35,12 @@ object Main extends Preprocessor {
       val ignoreMillisec = builder.add(Flow[Traces].map(traces => floorTimestamp(traces, 3)))
       val groupFloor = builder.add(Flow[Traces].map(traces => groupByFloor(traces)))
       val groupId = builder.add(Flow[Map[Floor, Traces]].map(floorMap => floorMap.map { case(floor, traces) => floor -> groupById(traces).values }))
+
+
+      // Calculation
       val generateFloorPairs = builder.add(Flow[Map[Floor, Iterable[Traces]]].map(floorTraces => {
         floorTraces.foldLeft(Iterable[(Traces, Traces)]())((pairs , tracesList) => pairs ++ pairElements[Traces](tracesList._2))
       }))
-
-      // Calculation
       def euclideanDistance(a: Location, b: Location): Distance = sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2))
       val maxMeetingDistance = 2.0f
       val finder = new SimpleMeetingFinder(euclideanDistance, maxMeetingDistance)
@@ -52,10 +53,10 @@ object Main extends Preprocessor {
 
       // Output
       val result = builder.add(Sink.foreach[Future[Iterable[Meeting]]](fut => {
-        val resultGenerator = new FileResultGenerator(s"result_${uid1}_${uid2}.csv")
+        val resultGenerator = new FileResultGenerator(s"meeting_${uid1}_${uid2}.csv")
         fut.map(meetings => {
           resultGenerator.write(meetings.toList)
-          println(s"Result was written into result_${uid1}_${uid2}.csv")
+          println(s"Result was written into meeting_${uid1}_${uid2}.csv")
         })
       }))
 
