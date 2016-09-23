@@ -8,7 +8,9 @@ import akka.stream.scaladsl.{Flow, GraphDSL, RunnableGraph, Sink, Source}
 import input.FileLoader
 import logic.SimpleMeetingFinder
 import models._
+import output.FileResultGenerator
 import preprocessing.Preprocessor
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -18,8 +20,8 @@ object Main extends Preprocessor {
   implicit val materializer = ActorMaterializer()
 
   def main(args: Array[String]): Unit = {
-    val uid1 = "78b85537"
-    val uid2 = "27cb9c6f"
+    val uid1 = args(0)
+    val uid2 = args(1)
     val flow = RunnableGraph.fromGraph(GraphDSL.create(){implicit builder =>
       import GraphDSL.Implicits._
 
@@ -49,8 +51,9 @@ object Main extends Preprocessor {
       }))
 
       // Sink
+      val resultGenerator = new FileResultGenerator(s"result_${uid1}_${uid2}.csv")
       val result = builder.add(Sink.foreach[Future[Iterable[Meeting]]](fut => {
-        fut.map(meetings => if(meetings.nonEmpty) meetings.foreach(m => println(m)) else println("No meeting occurs") )
+        fut.map(meetings => resultGenerator.write(meetings.toList))
       }))
 
       source ~> filterUID ~> ignoreMillisec ~> groupFloor ~> groupId ~> generateFloorPairs ~> calc ~> result

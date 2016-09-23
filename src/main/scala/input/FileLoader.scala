@@ -1,6 +1,6 @@
 package input
 
-import models.{Location, Trace, Traces}
+import models.{Location, Trace}
 import org.joda.time.{DateTime, DateTimeZone}
 
 import scala.io.Source
