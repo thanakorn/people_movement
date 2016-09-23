@@ -50,10 +50,13 @@ object Main extends Preprocessor {
         meetingFSeq.flatMap(x => Future(x.flatten))
       }))
 
-      // Sink
-      val resultGenerator = new FileResultGenerator(s"result_${uid1}_${uid2}.csv")
+      // Output
       val result = builder.add(Sink.foreach[Future[Iterable[Meeting]]](fut => {
-        fut.map(meetings => resultGenerator.write(meetings.toList))
+        val resultGenerator = new FileResultGenerator(s"result_${uid1}_${uid2}.csv")
+        fut.map(meetings => {
+          resultGenerator.write(meetings.toList)
+          println(s"Result was written into result_${uid1}_${uid2}.csv")
+        })
       }))
 
       source ~> filterUID ~> ignoreMillisec ~> groupFloor ~> groupId ~> generateFloorPairs ~> calc ~> result
