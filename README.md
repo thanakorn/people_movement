@@ -72,7 +72,7 @@ Techonology
 
 Further improvement
 ------
-* To support large batch query
+* Large batch query
     * Using concurrent processing : Since each query is independence from other, higher concurrent processing leads to better performance.
     One approach that can be used to tackle this problem is using distributed computing by distribute data and queries into multiple nodes.
     For example, spreading queries to message queue(Kafka, RabbitMQ etc.) and having multiple consumers to fetch queries and do calculation then write to central data storage.
